@@ -12,7 +12,8 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "CMaker\\": "src/"
+            "CMaker\\": ["src/","/"],
+            "CMaker\\components\\":"components"
         },
         "files": [
             "src/Helper.php"

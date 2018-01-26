@@ -7,6 +7,8 @@
 namespace CMaker;
 
 
+
+
 class Maker
 {
     public static $set = [];  //所有设置的key value
@@ -14,7 +16,7 @@ class Maker
     public static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
     public static $instance = null;       //单例
     public static $templatePlan = 'components'; //模板方案
-    public static $static_path = STATIC_PATH;
+    public static $static_path = '';
     public static $run_time = 0;
 
     /**
@@ -91,7 +93,9 @@ class Maker
      */
     public static function getClass($called ){
         $arr = explode('\\',__CLASS__);
+
         $buildPlan = self::$templatePlan;
+
 
         array_pop($arr);
         array_push($arr ,$buildPlan ,$called);
@@ -150,7 +154,7 @@ class Maker
 
         //所有的组件设置均存入cookie
         if(isset($cookie_component_set) && count($cookie_component_set)){
-            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".'p(component_set);'."\r\n\n";
+            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".'console.log(component_set);'."\r\n\n";
         }else{
             $frist_line = '';
         }
