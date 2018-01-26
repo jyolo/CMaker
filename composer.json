@@ -1,5 +1,6 @@
 {
     "name": "jyolo/CMaker",
+    "version": "1.0",
     "description": "php component maker",
     "license": "Apache Licene 2.0",
     "authors": [
