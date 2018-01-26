@@ -6,8 +6,6 @@
 
 namespace CMaker;
 
-use think\facade\Session;
-
 
 class Maker
 {
@@ -79,26 +77,8 @@ class Maker
      * 创建js
      */
     public static function createJs($type = 'script'){
-//        $path = $_SERVER['DOCUMENT_ROOT'].self::$static_path;
-//        if(!file_exists($path))mkdir($path,true);
-
-//        $JsPlugin = self::getRelyOnJsPlugin();
-
         $script = self::getComponentScript($type);
-
         return $script;
-
-
-//        $filename = self::JS_FILE_NAME;
-
-
-//        session('CMakerjs' ,$content);
-//        if(!file_exists($path.$filename)){
-//            file_put_contents($path.$filename,'');
-//        }else{
-//            file_put_contents($path.$filename,$content,true);
-//        }
-
     }
 
 
