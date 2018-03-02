@@ -9,6 +9,7 @@ namespace CMaker;
 
 use think\Db;
 use think\Exception;
+
 interface Transport{
 
     /*

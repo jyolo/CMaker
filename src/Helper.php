@@ -5,12 +5,13 @@ function p($var){
     var_dump($var);
     echo '</pre>';
 }
-
-function CMaker($type,$show = 'ShowAll'){
+/*
+ * 快速调用CMaker 创建组件
+ * @param string component name
+ */
+function CMaker($type){
     return \CMaker\Maker::build($type);
 }
-
-
 
 //模板中调用
 function CMakerJs(){
