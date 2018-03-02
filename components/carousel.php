@@ -55,21 +55,21 @@ EOT;
     public static function relyOnJsPlugin($static_path){
 
         $arr = [
-            'css' => [
-                [
-                    'path' => "{$static_path}plugin/layui/css/layui.css",
-                    'attr' => ['media' => 'all']
-                ]
-            ],
-            'js' => [
-
-                [
-                    'path' => "{$static_path}plugin/layui/layui.js"
-                ],
-                [
-                    'path' => "{$static_path}plugin/lay-extend-module/config.js"
-                ]
-            ]
+//            'css' => [
+//                [
+//                    'path' => "{$static_path}plugin/layui/css/layui.css",
+//                    'attr' => ['media' => 'all']
+//                ]
+//            ],
+//            'js' => [
+//
+//                [
+//                    'path' => "{$static_path}plugin/layui/layui.js"
+//                ],
+//                [
+//                    'path' => "{$static_path}plugin/lay-extend-module/config.js"
+//                ]
+//            ]
         ];
 
 

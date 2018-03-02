@@ -6,7 +6,7 @@
 
 namespace CMaker;
 
-
+use think\facade\Session;
 
 
 class Maker
@@ -16,7 +16,7 @@ class Maker
     public static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
     public static $instance = null;       //单例
     public static $templatePlan = 'components'; //模板方案
-    public static $static_path = '';
+    public static $static_path = STATIC_PATH;
     public static $run_time = 0;
 
     /**
@@ -93,9 +93,7 @@ class Maker
      */
     public static function getClass($called ){
         $arr = explode('\\',__CLASS__);
-
         $buildPlan = self::$templatePlan;
-
 
         array_pop($arr);
         array_push($arr ,$buildPlan ,$called);
@@ -112,13 +110,14 @@ class Maker
      * $showtype  'all' 显示插件的应用 ,'plugin' 只显示插件的引用  ,'script' 只显示 js脚本
      * @return bool|string
      */
-    private static function getComponentScript($showtype = 'showall'){
+    private static function getComponentScript($showtype){
 
         //检查容器如果当前页面一个组件都没有调用 ，直接返回
         if(!count(self::$components)) return ;
 
         //获取组建依赖的插件
         $JsPlugin = self::getRelyOnJsPlugin()."\r\n";
+
         //获取组件的js 脚本
         $start = '<script>'."\r\n";
 
@@ -154,7 +153,7 @@ class Maker
 
         //所有的组件设置均存入cookie
         if(isset($cookie_component_set) && count($cookie_component_set)){
-            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".'console.log(component_set);'."\r\n\n";
+            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".'p(component_set);'."\r\n\n";
         }else{
             $frist_line = '';
         }
@@ -170,6 +169,7 @@ class Maker
 
         switch ($showtype){
             case 'all':
+
                 return $JsPlugin.$script;
                 break;
             case 'plugin':
@@ -209,6 +209,8 @@ class Maker
             }
 
         }
+
+
 
         $box  = [];
         //组件css 和 js 的引用
@@ -251,12 +253,6 @@ class Maker
                     }
                     $box[] = $str;
                 });
-
-
-
-
-
-
             }
         }
 
@@ -280,7 +276,18 @@ class Maker
 
         if(!in_array($name,array_keys($class::attr())))throw new \ErrorException(self::$set['component_name'].'组件 attr 方法中 没有定义该"'.$name.'"属性');
 
-        self::$set[$name] = isset($arguments[0]) ? $arguments[0] :'';
+        //特殊的relation 组件 where 可以向 tp 中连续使用 where
+        if(self::$set['component_name'] == 'relation' && $name == 'where'){
+
+            if(!isset(self::$set[$name]))self::$set[$name] = [];
+            //压入数组
+            if(count($arguments))array_push(self::$set[$name],$arguments);
+
+        }else{
+            self::$set[$name] = isset($arguments[0]) ? $arguments[0] :'';
+        }
+
+
         return $this;
     }
 }
