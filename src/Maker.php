@@ -6,8 +6,6 @@
 
 namespace CMaker;
 
-use think\facade\Session;
-
 
 class Maker
 {
