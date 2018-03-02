@@ -31,6 +31,7 @@ class table extends Component
             'height' => '500',
             'page' => true,
             'limit' => 10,
+            'param' => [],
             'response' => [
                 'statusName' => 'code',
                 'statusCode' => 1,
@@ -57,26 +58,7 @@ EOT;
      * 组件依赖的js 插件
      */
     public static function relyOnJsPlugin($static_path){
-
-        $arr = [
-            'css' => [
-                [
-                    'path' => "{$static_path}plugin/layui/css/layui.css",
-                    'attr' => ['media' => 'all']
-                ]
-            ],
-            'js' => [
-                [
-                    'path' => "{$static_path}plugin/layui/layui.js"
-                ],
-                [
-                    'path' => "{$static_path}plugin/lay-extend-module/config.js"
-                ]
-            ]
-        ];
-
-
-        return $arr;
+        return [];
     }
 
     /*
@@ -97,6 +79,7 @@ EOT;
         ,height: set.height //容器高度
         ,cols:  [set.cols]
         ,url: set.url
+        ,where:set.param
         ,page : set.page
         ,limit : set.limit
         ,method: set.method
@@ -112,6 +95,7 @@ EOT;
 EOT;
         return $srcript;
     }
+
 
 
 }
