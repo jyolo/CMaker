@@ -34,8 +34,8 @@ class select extends Component
             $attr['option'] = self::strToArray($attr);
         }
 
-
-        if(!strlen($attr['choose']) || $attr['choose'] == 0)$attr['choose'] = null;
+        if(!strlen($attr['choose']))$attr['choose'] = null;
+        //if(!strlen($attr['choose']) || $attr['choose'] == 0)$attr['choose'] = null;
 
         if(strlen($attr['choose'])){
             if(!isset($attr['option'][$attr['choose']]))throw new Exception('option中没有该选项');

@@ -32,9 +32,10 @@ class table extends Component
             'page' => true,
             'limit' => 10,
             'param' => [],
+            'loading' => true,
             'response' => [
                 'statusName' => 'code',
-                'statusCode' => 1,
+                'statusCode' => 0,
                 'msgName' => 'msg',
                 'countName' => 'count',
                 'dataName' => 'data'
@@ -80,6 +81,7 @@ EOT;
         ,cols:  [set.cols]
         ,url: set.url
         ,where:set.param
+        ,loading:set.loading
         ,page : set.page
         ,limit : set.limit
         ,method: set.method

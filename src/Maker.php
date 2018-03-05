@@ -6,6 +6,8 @@
 
 namespace CMaker;
 
+use think\facade\Session;
+
 
 class Maker
 {
@@ -14,7 +16,7 @@ class Maker
     public static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
     public static $instance = null;       //单例
     public static $templatePlan = 'components'; //模板方案
-    public static $static_path = STATIC_PATH;
+    public static $static_path = '/static/';
     public static $run_time = 0;
 
     /**
@@ -76,7 +78,7 @@ class Maker
     /**
      * 创建js
      */
-    public static function createJs($type = 'script'){
+    public static function createJs($type = 'all'){
         $script = self::getComponentScript($type);
         return $script;
     }
@@ -167,7 +169,6 @@ class Maker
 
         switch ($showtype){
             case 'all':
-
                 return $JsPlugin.$script;
                 break;
             case 'plugin':
