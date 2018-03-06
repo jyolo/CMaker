@@ -1,10 +1,6 @@
 <?php
 
-function p($var){
-    echo '<pre>';
-    var_dump($var);
-    echo '</pre>';
-}
+
 
 function CMaker($type,$show = 'ShowAll'){
     return \CMaker\Maker::build($type);
