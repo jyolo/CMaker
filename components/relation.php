@@ -26,7 +26,7 @@ class relation extends Component
             'name' => 'aid',// 表单的name值
             'layVerify' => '',
             //Db类的使用的属性
-            'table' => 'article', //数据表
+            'table' => '', //数据表
             'field' => 'id,title' , // 作为值的字段 默认第一个作为表单提交的value 第二个作为显示
             'where' => '',
             'limit' => '',
@@ -47,14 +47,16 @@ class relation extends Component
             return 'ralation组件showtype 仅支持select,checkbox,radio,treeSelect 这四种显示方式';
 
 
-        if(self::$attr['showtype'] == 'treeSelect'){
-            $tree_array = self::get_tree_array(self::$attr);
-            $data = self::tree_to_array($tree_array,self::$attr['field']);
-            self::$attr['showtype'] = 'select'; //无线层级 树形结构 默认展现形式是 select
-        }else{
-            //获取数据
-            $data = self::get_models_data();
-
+        try{
+            if(self::$attr['showtype'] == 'treeSelect'){
+                $data = self::get_tree_array(self::$attr ,self::$attr['field']);
+                self::$attr['showtype'] = 'select'; //无线层级 树形结构 默认展现形式是 select
+            }else{
+                //获取数据
+                $data = self::get_models_data();
+            }
+        }catch (\Exception $e){
+            $data = [];
         }
 
         $dom = Maker::build(self::$attr['showtype'])

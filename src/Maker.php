@@ -51,7 +51,6 @@ class Maker
         //获取组件的class
         $class = self::getClass(self::$set['component_name']);
 
-
         //获取组件的属性
         $component_attr = $class::attr();
         //外部调用设定代替默认值
