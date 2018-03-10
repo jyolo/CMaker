@@ -24,7 +24,7 @@ class webuploader extends Component
             'method' => 'post', //请求方法
             'name' => 'thumb', //字段名称
             'uploadtype' => 'image', //[image ,file ]
-            'serverUrl' => '/admin.php/base/uploads/index.html',
+            'serverUrl' => url('mvcbuilder/webupload'),
         ];
     }
 
