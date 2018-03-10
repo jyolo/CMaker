@@ -20,6 +20,7 @@ class ueditor extends Component
             'name' => 'content',
             'show' => 'simple',
             'serverUrl' => '/admin.php/base/uploads/ueditor',
+            'serverUrl' => url('mvcbuilder/ueditor'),
         ];
     }
 
