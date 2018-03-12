@@ -19,7 +19,6 @@ class ueditor extends Component
             'layVerify' => '',
             'name' => 'content',
             'show' => 'simple',
-            'serverUrl' => '/admin.php/base/uploads/ueditor',
             'serverUrl' => url('/mvcbuilder/ueditor'),
         ];
     }
