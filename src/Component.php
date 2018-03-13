@@ -78,11 +78,12 @@ abstract class Component implements Transport
 
     /**
      * 非递归得到 层级树形结构的 多维数组
-     * @param array $config
-     * @return array
+     * @param array $config [ treeData => array ,field => 'id ,pid ,name']
+     * @param bool 是否保留数组 默认false不保留
+     * @return bool 是否直接返回树形层级的数组 默认false
      * @throws Exception
      */
-    public static function get_tree_array($config = [] ,$component_setting_field = false ,$keep_array = false){
+    public static function get_tree_array($config = [] ,$keep_array = false ,$return_tree_array = false){
         $field = explode(',',$config['field']);
 
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
@@ -103,9 +104,7 @@ abstract class Component implements Transport
                 ->select();
 
         }
-
         $tree = [];
-
         //创建初始化数组
         foreach($arr as $k => $v){
             //如果第一个元素的pid 不是0 则，默认处理为0
@@ -116,9 +115,6 @@ abstract class Component implements Transport
             $tree[ $v[ $field[0] ] ]['_path'] = [0];
             $tree[ $v[ $field[0] ] ]['son'] = [];
         }
-
-
-
         //引用
         foreach($tree as $sk => $sv){
 
@@ -135,18 +131,21 @@ abstract class Component implements Transport
                 }
             }
         }
-
-
         //剔除多余元素
         foreach($tree as $k => $v){
             //层级关系字符串化
             $tree[$k]['_path'] = join(',',$v['_path']);
-            //保留删除多余元，table搜索的时候 会经过下一个处理 进行二次转换
-            //if(isset($v[$field[1]]) && $v[$field[1]] != 0)  unset($tree[$k]);
+
+            //如果是直接返回树形层级关系的数组 则 剔除掉多余的数组 否则保留 table搜索的时候 会经过下一个处理 进行二次转换
+            if($return_tree_array == true){
+                if(isset($v[$field[1]]) && $v[$field[1]] != 0)  unset($tree[$k]);
+            }
+
         }
 
         sort($tree);
-        $arr = self::tree_to_array($tree ,$component_setting_field ,$keep_array);
+        if($return_tree_array == true) return $tree;
+        $arr = self::tree_to_array($tree ,$config['field'] ,$keep_array);
 
         //此刻的数据已经是带着层级排列 删除多余的数组属性
         foreach($arr as $ak => $av){

@@ -152,7 +152,7 @@ class Maker
 
         //所有的组件设置均存入cookie
         if(isset($cookie_component_set) && count($cookie_component_set)){
-            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".'p(component_set);'."\r\n\n";
+            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".''."\r\n\n";
         }else{
             $frist_line = '';
         }
