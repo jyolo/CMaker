@@ -178,6 +178,7 @@ abstract class Component implements Transport
 
         foreach($tree as $k => $v){
             if(!$keep_array){
+
                 //如果已经有层级符号则不添加
                 if(!strpos($v[$showfield],'|-')) {
                     $arr[$v[$field['0']]] = self::buildSpace($v['_path']) . $v[$showfield];
@@ -204,6 +205,7 @@ abstract class Component implements Transport
     * 生成空格层级字符串
     */
     protected static function buildSpace($str){
+
         $spacer = '';
         if($str == '0'){
             $spacer .= '';
