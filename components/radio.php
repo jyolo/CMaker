@@ -17,6 +17,7 @@ class radio extends Component
             'helpinfo' => '帮助信息',
             'option' => ['选项一','选项二'],
             'choose' => '',
+            'fields' => false,
             'name' => 'defualt',
             'layVerify' => '',
         ];
@@ -40,16 +41,20 @@ class radio extends Component
 
         $input = '';
         foreach($attr['option'] as $k => $v){
-
-            $checked = (intval($attr['choose']) == $k) ?  'checked' :  '';
-
             //$input .= '<input type="radio" name="'.$attr['name'].'"  title="'.$v.'" '.$checked.'> ';
-
             //fixed  同一个页面多个radio 在name 值相同的情况下 checked 状态会失效
             //未设置name的都为 defualt
             if($attr['name'] == 'defualt')$attr['name'] = $attr['name'].$attr['id'];
 
-            $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$k.'"  title="'.$v.'" '.$checked.'> ';
+            if($attr['fields'] != false){
+                $f = explode(',',$attr['fields']);
+                $checked = (intval($attr['choose']) == $v[$f[0]]) ?  'checked' :  '';
+                $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$v[$f[0]].'"  title="'.$v[$f[1]].'" '.$checked.'> ';
+            }else{
+                $checked = (intval($attr['choose']) == $k) ?  'checked' :  '';
+                $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$k.'"  title="'.$v.'" '.$checked.'> ';
+            }
+
         }
 
 

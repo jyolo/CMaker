@@ -18,6 +18,7 @@ class select extends Component
             'helpinfo' => '',
             'option' => '选项一|选项二',//支持 字符串 和 数组 两种形式
             'choose' => '',
+            'fields' => false,
             'name' => 'defualt',
             'layVerify' => '',
 
@@ -45,10 +46,16 @@ class select extends Component
 
 
         foreach($attr['option'] as $k => $v){
+            if($attr['fields'] != false){
+                $f = explode(',',$attr['fields']);
 
-            $selected = (strlen($attr['choose']) && $attr['choose'] == $k) ?  'selected' :  '';
+                $selected = (strlen($attr['choose']) && $attr['choose'] == $v[$f[0]]) ?  'selected' :  '';
+                $option .= '<option value="'.$v[$f[0]].'" '.$selected.'>'.$v[$f[1]].'</option>';
+            }else{
+                $selected = (strlen($attr['choose']) && $attr['choose'] == $k) ?  'selected' :  '';
+                $option .= '<option value="'.$k.'" '.$selected.'>'.$v.'</option>';
+            }
 
-            $option .= '<option value="'.$k.'" '.$selected.'>'.$v.'</option>';
         }
 
         $dom = <<<EOT

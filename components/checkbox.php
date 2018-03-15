@@ -14,9 +14,10 @@ class checkbox extends Component
     public static function attr(){
         return [
             'label'=>'复选框',
-            'helpinfo' => '帮助信息',
+            'helpinfo' => '',
             'option' => ['选项一','选项二'],
             'choose' => '',
+            'fields' => false , //多维数组的时候，指定 值 ,显示的 字段
             'name' => 'defualt',
             'layVerify' => '',
 
@@ -45,9 +46,17 @@ class checkbox extends Component
 
         foreach($attr['option'] as $k => $v){
 
-            $checked = (in_array($k,$choose)) ?  'checked' :  '';
 
-            $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$k.'" title="'.$v.'" '.$checked.'> ';
+            if($attr['fields'] != false){
+                $f = explode(',',$attr['fields']);
+
+                $checked = (in_array($v[$f[0]],$choose)) ?  'checked' :  '';
+                $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$v[$f[0]].'" title="'.$v[$f[1]].'" '.$checked.'> ';
+            }else{
+                $checked = (in_array($k,$choose)) ?  'checked' :  '';
+                $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$k.'" title="'.$v.'" '.$checked.'> ';
+            }
+
         }
 
         $dom = <<<EOT
