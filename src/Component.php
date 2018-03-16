@@ -88,6 +88,7 @@ abstract class Component implements Transport
 
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
 
+        //如果有 数据直接传进来 则直接使用数据
         if(isset($config['treeData']) ){
             if(!count($config['treeData'])) return [];
             $arr = $config['treeData'];
@@ -96,6 +97,19 @@ abstract class Component implements Transport
             $flag = Db::query($sql);
             //表不存在返回空数组
             if(!count($flag))return [];
+
+
+            //表存在的情况下
+            //b::name($config['table'])->value();
+            if(!isset($config['field']) || strlen($config['field']) == 0) throw new \Exception('field 不能为空');
+            $field = explode(',' ,$config['field']);
+            $sql = 'select COUNT(*) as num from information_schema.columns WHERE table_name = "'.config('database.prefix').$config['table'].'" and column_name= "'.$field[1].'" ';
+            $flag = Db::query($sql);
+            //查看 关系字段是否存在，不存在 直接返回空 数组
+            //解决 当生成方案 是normal 转 category 的时候，需要对自己的表新增层级关系的时候
+            if($flag[0]['num'] == 0)return [];
+
+
 
             $arr = Db::name($config['table'])
                 ->field($config['field'])
