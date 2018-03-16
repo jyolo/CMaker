@@ -56,7 +56,8 @@ class relation extends Component
                 $data = self::get_models_data();
             }
         }catch (\Exception $e){
-            $data = [];
+            throw new \Exception($e->getMessage());
+
         }
 
         $dom = Maker::build(self::$attr['showtype'])
