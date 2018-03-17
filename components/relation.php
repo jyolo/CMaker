@@ -78,6 +78,10 @@ class relation extends Component
      */
     private static function get_models_data(){
         $attr = self::$attr;
+        //表不存在返回空数组
+        $sql = 'show tables like \''.config('database.prefix').$attr['table'].'\' ';
+        $flag = Db::query($sql);
+        if(!count($flag))return [];
 
         $data = Db::name($attr['table'])
             ->where($attr['where'])
