@@ -123,7 +123,10 @@ class Maker
         $script = '';
 
         foreach(self::$components as $k => $v){
-
+            //如果是编辑的内容 则转义一下 否则json.parse的时候会报错
+            if($v['component_name'] == 'ueditor'){
+                $v['set']['value'] = htmlentities($v['set']['value']);
+            }
             $class = self::getClass($v['component_name']);
             //初始化组件的 唯一id
             //系统会生成 组件名称的全局函数 以及 全局的设置的对象
@@ -137,7 +140,7 @@ class Maker
 
                 //$json = json_encode($v);
                 //将有js的组件的设置 存入 cookie变量中
-                $cookie_component_set[$v['uniqid_id']] =  $v;
+                $__component_set[$v['uniqid_id']] =  $v;
 
                 $script .= 'var '.$v['uniqid_id'].'_attr = component_set.'.$v['uniqid_id'].' ; '."\r\n\r\n";
                 $script .= 'var '.$v['uniqid_id'].' = function (attr){'."\r\n";
@@ -151,8 +154,9 @@ class Maker
 
 
         //所有的组件设置均存入cookie
-        if(isset($cookie_component_set) && count($cookie_component_set)){
-            $frist_line = 'var component_set = JSON.parse(\''.json_encode($cookie_component_set).'\');'."\r\n\n".''."\r\n\n";
+        if(isset($__component_set) && count($__component_set)){
+
+            $frist_line = 'var component_set = JSON.parse(\''.json_encode($__component_set ,true).'\');'."\r\n\n".''."\r\n\n";
         }else{
             $frist_line = '';
         }

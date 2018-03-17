@@ -84,7 +84,6 @@ abstract class Component implements Transport
      * @throws Exception
      */
     public static function get_tree_array($config = [] ,$keep_array = false ,$return_tree_array = false){
-
         $field = explode(',',$config['field']);
 
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
@@ -93,9 +92,7 @@ abstract class Component implements Transport
         if(isset($config['treeData']) ){
             if(!count($config['treeData'])) return [];
             $arr = $config['treeData'];
-        }
-        else
-        {
+        }else{
             $sql = 'show tables like \''.config('database.prefix').$config['table'].'\' ';
             $flag = Db::query($sql);
             //表不存在返回空数组
@@ -121,7 +118,6 @@ abstract class Component implements Transport
                 ->select();
 
         }
-
         $tree = [];
         //创建初始化数组
         foreach($arr as $k => $v){
@@ -158,14 +154,11 @@ abstract class Component implements Transport
             if($return_tree_array == true){
                 if(isset($v[$field[1]]) && $v[$field[1]] != 0)  unset($tree[$k]);
             }
+
         }
 
-        //如果是需要 直接返回 tree_array 则 直接返回 剔除掉无用元素的 层级关系的 数组
-        if($return_tree_array == true){
-            sort($tree);
-            return $tree;
-        }
-
+        sort($tree);
+        if($return_tree_array == true) return $tree;
         $arr = self::tree_to_array($tree ,$config['field'] ,$keep_array);
 
         //此刻的数据已经是带着层级排列 删除多余的数组属性
@@ -174,22 +167,8 @@ abstract class Component implements Transport
             if(isset($av['_path']))unset($av['_path']);
             $arr[$ak] = $av;
         }
-
         //释放变量
         unset($tree);
-
-
-        //如果是keey_array table 所用 从新排序
-        if($keep_array == true){
-            $table_arr = [];
-            $i = 0;
-            foreach($arr as $k => $v){
-                $table_arr[$i] = $v;
-                $i++;
-            }
-            return $table_arr;
-        }
-
         //sort($arr);//不能重新排序 会影响到 treeselect 的value值 具体情况 看控制器逻辑层是否需要重新排序
         return $arr;
 
@@ -205,11 +184,9 @@ abstract class Component implements Transport
      * @return array
      */
     protected static function tree_to_array($tree ,$component_setting_field = false ,$keep_array = false){
-
         if(!$component_setting_field) throw new Exception('缺少 组件设置的 field的参数');
         $arr = [];
         $field = explode(',',$component_setting_field);
-        
         //第三个字段 为显示的字段
         $showfield = (isset($field[2]) && strlen($field[2])) ? $field[2]: $field[1];
 
@@ -220,9 +197,7 @@ abstract class Component implements Transport
                 if(!strpos($v[$showfield],'|-')) {
                     $arr[$v[$field['0']]] = self::buildSpace($v['_path']) . $v[$showfield];
                 }
-            }
-            else
-            {
+            }else{
                 //如果已经有层级符号则不添加
                 if(!strpos($v[$showfield],'|-')){
                     $v[$showfield] = self::buildSpace($v['_path']).$v[$showfield];
@@ -236,7 +211,6 @@ abstract class Component implements Transport
                 $arr = $arr + $gui;
             }
         }
-
         return $arr;
     }
 
