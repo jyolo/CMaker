@@ -84,6 +84,7 @@ abstract class Component implements Transport
      * @throws Exception
      */
     public static function get_tree_array($config = [] ,$keep_array = false ,$return_tree_array = false){
+
         $field = explode(',',$config['field']);
 
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
@@ -208,6 +209,7 @@ abstract class Component implements Transport
         if(!$component_setting_field) throw new Exception('缺少 组件设置的 field的参数');
         $arr = [];
         $field = explode(',',$component_setting_field);
+        
         //第三个字段 为显示的字段
         $showfield = (isset($field[2]) && strlen($field[2])) ? $field[2]: $field[1];
 

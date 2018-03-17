@@ -77,6 +77,7 @@ class relation extends Component
      * @return array
      */
     private static function get_models_data(){
+        
         $attr = self::$attr;
         //表不存在返回空数组
         $sql = 'show tables like \''.config('database.prefix').$attr['table'].'\' ';
