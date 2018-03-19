@@ -3,6 +3,13 @@ namespace CMaker\components;
 use CMaker\Component;
 use CMaker\Maker;
 
+
+
+
+//use CMaker\Maker;
+//Route::rule('component/:component_name', function ($component_name,Maker $maker){
+//    return $maker->requset($component_name);
+//});
 //{:CMaker('linkselect')
 //    ->label('所属分类|所属仓库|产品列表')
 //    ->helpinfo('联动选择')
