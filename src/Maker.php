@@ -75,6 +75,21 @@ class Maker
     }
 
     /**
+     * 把请求转发到组件内
+     * @return string
+     * @throws Exception
+     */
+    public function requset($cname){
+        $component = self::getClass($cname);
+
+        if(!class_exists($component))throw new \Exception('组件不存在');
+        if(!in_array('requset',get_class_methods($component))) throw new \Exception('组件不存在 requset 方法');
+
+        return $component::requset();
+
+    }
+
+    /**
      * 创建js
      */
     public static function createJs($type = 'all'){
