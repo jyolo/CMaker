@@ -3,7 +3,16 @@ namespace CMaker\components;
 use CMaker\Component;
 use CMaker\Maker;
 
-
+//{:CMaker('linkselect')
+//    ->label('所属分类|所属仓库|产品列表')
+//    ->helpinfo('联动选择')
+//    ->linkfield('cid|wid|gid')
+//    ->select([
+//        ['table' => 'goods_category','field' => 'id,pid,cat_name','istree' => true ],
+//        ['table' => 'goods as a' ,'join' => 'warehouse as b ,a.wid = b.id' ,'field' => 'b.name,a.wid' ,'group' => 'wid' ],
+//        ['table' => 'goods']
+//    ])
+//    ->render()}
 /**
  * 幻灯片组件
  * User: jyolo
