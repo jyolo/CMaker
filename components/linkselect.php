@@ -15,12 +15,9 @@ use CMaker\Maker;
 ->helpinfo('联动选择')
 ->linkfield('cid|wid|gid')
 ->serverUrl(url('goodsin/linkselect'))
+->param('type - goods_cat,a - b | type - goods_warehouse | type - goods')
+->showfield('id - cat_name|wid - wname|id - name')
 ->value('2|2|5')
-->select([
-['param' => ['type' => 'goods_cat'] ,'showfield' => 'id,cat_name' ],
-['param' => ['type' => 'goods_warehouse'] ,'showfield' => 'wid,wname'],
-['param' => ['type' => 'goods'] ,'showfield' => 'id,name']
-])
 ->render()}
  */
 class linkselect extends Component
@@ -35,9 +32,11 @@ class linkselect extends Component
             'label' => '联动选择1|联动选择2',
             'helpinfo' => '',
             'linkfield' => 'pid|id',
-            'value' => '',
             'serverUrl' => '',
-            'select' => [],
+            'param' => '', // key-value | key-value |type-goods
+            'showfield' => '', // id,goodsname|wid,wname
+            'value' => '',//对应上面的linkfield 数字即可 ，2,2,3
+
         ];
 
     }
@@ -50,6 +49,8 @@ class linkselect extends Component
      * */
     public static function dom(){
         $attr = self::$attr;
+//        $attr['param'] = self::strToArray($attr['param']);
+//        p($attr['param']);
 
         $label = explode('|',$attr['label']);
         $linkfield = explode('|',$attr['linkfield']);
@@ -69,7 +70,7 @@ EOT;
         }
 
         $dom = <<<EOT
-            <div class="layui-form-item" component-name="linkselect" id="{$attr['id']}">
+            <div class="layui-form-item {$attr['component_name']}" component-name="linkselect" id="{$attr['id']}">
                     {$str}
                     <div class="layui-form-mid layui-word-aux">{$attr['helpinfo']}</div>
                 </div>
@@ -93,14 +94,28 @@ EOT;
           
         var the_last_select = $('#'+attr.uniqid_id).find('select').length - 1;
         var selects = $('#'+attr.uniqid_id).find('select');
+        p(selects);
+        p('#'+attr.uniqid_id);
+        
         var allparam = {};
         var value = attr.set.value.split('|');
         
+        if(attr.set.param.length > 0){
+            var param = strtoobj(attr.set.param);
+        }else{
+            var param = {};
+        }
+        if(attr.set.showfield.length > 0){
+            var showfield = strtoobj(attr.set.showfield);
+        }else{
+            var showfield = {};
+        }
+        
         selects.each(function(i,n){
             if(i == 0){
-                if(!attr.set.select[i]) return;
-                $.post(attr.set.serverUrl,attr.set.select[i].param,function(msg){
-                    builder_options(n,msg,attr.set.select[i].showfield ,value[i]);
+                if(!param[i]) return;
+                $.post(attr.set.serverUrl,param[i],function(msg){
+                    builder_options(n,msg,showfield[i] ,value[i]);
                 });
             }
             
@@ -113,26 +128,36 @@ EOT;
                             $(n).find('option').slice(1).remove();
                         })
                    }
-                
-                    var param = attr.set.select[i+1].param;
-                    param[data.elem.name] = data.value;
+                    param[i+1][data.elem.name] = data.value;
                     allparam[data.elem.name] = data.value
-                    var marge_param = $.extend(param,allparam);
-                    
+                    var marge_param = $.extend(param[i+1],allparam);
                     $.post(attr.set.serverUrl,marge_param,function(msg){
-                        var showfield = attr.set.select[i+1].showfield;
-                        builder_options(selects.eq(i+1),msg,showfield ,value[i+1]);
+                        builder_options(selects.eq(i+1),msg,showfield[i+1] ,value[i+1]);
                     });
                 });
             }
             
         });
-        
+          
+        function strtoobj(str){
+            var re = {};
+            $.each(str.split('|'),function(k,n){
+                var _arr = n.split(',');
+                var obj = {};
+                $.each(_arr ,function(i,n){
+                    var _arg = n.split('-');
+                    obj[i] = new Function("return {'"+$.trim(_arg[0])+"':'"+$.trim(_arg[1])+"'}")();
+                    re[k] = $.extend(re[k],obj[i]);
+                })
+            })
+            return re;
+        }
         function builder_options(select_dom ,json , showfield ,value = false){
-            
             $(select_dom).find('option').slice(1).remove();
-            var field = showfield.split(',');
-            
+            var field = [] ;
+            $.each(showfield,function(i,v){
+                field[0] = i;field[1] = v;
+            })
             var option = '';
             $.each(json,function(i,n){
                 if(value == n[field[0]]){
@@ -142,18 +167,16 @@ EOT;
                 }
                 option += '<option value="'+ n[field[0]] +'" '+selected+'>'+ n[field[1]] +'</option>';
             })
-            
             $(select_dom).append(option);
             form.render('select');
-            
-            $(select_dom).next('.layui-unselect').find('dd').each(function(i,n){
-                  if($(n).attr('lay-value') == value){
-                    $(n).trigger('click');
-                  }
-            });
-            
-            
-            
+            if(attr.set.value.length > 0){
+                var values = attr.set.value.split('|');
+                $(select_dom).next('.layui-unselect').find('dd').each(function(i,n){
+                      if(values.indexOf($(n).attr('lay-value')) != '-1'){
+                        $(n).trigger('click');
+                      }
+                });
+            } 
         }
         
         
@@ -165,6 +188,22 @@ EOT;
     }
 
 
-    
+    private static function strToArray($str){
+        //字符串模式 转为数组模式
+
+        $arr = explode('|',$str);
+
+        $tem = [];
+
+        foreach($arr as $k => $v){
+            $k = trim($k);
+            $v = trim($v);
+
+            $arg = explode('-',$v);
+            $tem[$k] = [trim($arg[0]) => trim($arg[1])];
+
+        }
+        return $tem;
+    }
 
 }
