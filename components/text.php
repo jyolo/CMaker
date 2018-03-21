@@ -21,6 +21,7 @@ class text extends Component
             'name' => '',
             'layVerify' => '',
             'placeholder' => '',
+            'showtype' => 'inline',
             'disabled' => false,
         ];
     }
@@ -34,7 +35,7 @@ class text extends Component
         $dom = <<<EOT
     <div class="layui-form-item" component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
-        <div class="layui-input-inline">
+        <div class="layui-input-{$attr['showtype']}">
           <input lay-verify="{$attr['layVerify']}" type="text" class="{$attr['classname']} layui-input" name="{$attr['name']}" value="{$attr['value']}"  placeholder="{$attr['placeholder']}" {$attr['disabled']}>
         </div>
         <div class="layui-form-mid layui-word-aux">{$attr['helpinfo']}</div>
