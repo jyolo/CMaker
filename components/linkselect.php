@@ -31,6 +31,8 @@ class linkselect extends Component
         return [
             'label' => '联动选择1|联动选择2',
             'helpinfo' => '',
+            'layVerify' => '',
+            'name' => 'gid',
             'linkfield' => 'pid|id',
             'serverUrl' => '',
             'param' => '', // key-value | key-value |type-goods
@@ -61,7 +63,7 @@ class linkselect extends Component
             $str .= <<<EOT
     <label class="layui-form-label">{$v}</label>
     <div class="layui-input-inline">
-        <select name="{$linkfield[$k]}" lay-verify="required" lay-filter="{$attr['id']}_{$k}">
+        <select name="{$linkfield[$k]}" lay-verify="{$attr['layVerify']}" >
             <option value="">请选择</option>
         </select>
     </div>
@@ -86,16 +88,17 @@ EOT;
      * @return string
      * */
     public static function script($attr){
+
+
         $js =<<<EOT
-        p(attr);
+       
 ;layui.use(['form','jquery'], function(){
         var form = layui.form;
         var $ = layui.jquery;
           
         var the_last_select = $('#'+attr.uniqid_id).find('select').length - 1;
         var selects = $('#'+attr.uniqid_id).find('select');
-        p(selects);
-        p('#'+attr.uniqid_id);
+       
         
         var allparam = {};
         var value = attr.set.value.split('|');
@@ -112,6 +115,9 @@ EOT;
         }
         
         selects.each(function(i,n){
+            var filter = attr.uniqid_id + '_'+ i;
+            $(n).attr('lay-filter',filter);
+            
             if(i == 0){
                 if(!param[i]) return;
                 $.post(attr.set.serverUrl,param[i],function(msg){
@@ -120,9 +126,10 @@ EOT;
             }
             
             if(i != the_last_select){ //最后一个slelect 无需监听选择事件
-                var filter = attr.set.id + '_'+ i; 
+                //var filter = attr.set.id + '_'+ i; 
                 form.on('select('+ filter +')', function(data){
                    if(i == 0){
+                       
                         //第一个选择之后，清空后面的
                         $.each(selects.slice(1) ,function(i,n){
                             $(n).find('option').slice(1).remove();
