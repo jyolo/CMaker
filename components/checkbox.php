@@ -20,7 +20,7 @@ class checkbox extends Component
             'fields' => false , //多维数组的时候，指定 值 ,显示的 字段
             'name' => 'defualt',
             'layVerify' => '',
-
+            'layFilter' => '',
         ];
     }
 
@@ -51,16 +51,16 @@ class checkbox extends Component
                 $f = explode(',',$attr['fields']);
 
                 $checked = (in_array($v[$f[0]],$choose)) ?  'checked' :  '';
-                $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$v[$f[0]].'" title="'.$v[$f[1]].'" '.$checked.'> ';
+                $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$v[$f[0]].'" lay-filter="'.$attr['layFilter'].'" lay-verify="'.$attr['layVerify'].'" title="'.$v[$f[1]].'" '.$checked.'> ';
             }else{
                 $checked = (in_array($k,$choose)) ?  'checked' :  '';
-                $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$k.'" title="'.$v.'" '.$checked.'> ';
+                $input .= '<input type="checkbox" name="'.$attr['name'].'[]" value="'.$k.'" lay-filter="'.$attr['layFilter'].'" lay-verify="'.$attr['layVerify'].'" title="'.$v.'" '.$checked.'> ';
             }
 
         }
 
         $dom = <<<EOT
-    <div class="layui-form-item" component-name="{$attr['component_name']}">
+    <div class="layui-form-item"  component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
         <div class="layui-input-block">
             {$input}

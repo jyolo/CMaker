@@ -20,6 +20,7 @@ class radio extends Component
             'fields' => false,
             'name' => 'defualt',
             'layVerify' => '',
+            'layFilter' => '',
         ];
     }
 
@@ -37,7 +38,7 @@ class radio extends Component
             if(!isset($attr['option'][$attr['choose']]))throw new Exception('option中没有该选项');
         }
 
-        //p($attr);
+
 
         $input = '';
         foreach($attr['option'] as $k => $v){
@@ -49,17 +50,19 @@ class radio extends Component
             if($attr['fields'] != false){
                 $f = explode(',',$attr['fields']);
                 $checked = (intval($attr['choose']) == $v[$f[0]]) ?  'checked' :  '';
-                $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$v[$f[0]].'"  title="'.$v[$f[1]].'" '.$checked.'> ';
+                $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$v[$f[0]].'"  lay-filter="'.$attr['layFilter'].'" lay-verify="'.$attr['layVerify'].'"  title="'.$v[$f[1]].'" '.$checked.'> ';
             }else{
-                $checked = (intval($attr['choose']) == $k) ?  'checked' :  '';
-                $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$k.'"  title="'.$v.'" '.$checked.'> ';
+
+
+                $checked = ($attr['choose'] == $k) ?  'checked' :  '';
+                $input .= '<input type="radio" name="'.$attr['name'].'" value="'.$k.'"  lay-filter="'.$attr['layFilter'].'" lay-verify="'.$attr['layVerify'].'"  title="'.$v.'" '.$checked.'> ';
             }
 
         }
 
 
         $dom = <<<EOT
-    <div class="layui-form-item" component-name="{$attr['component_name']}">
+    <div class="layui-form-item"  component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
         <div class="layui-input-block">
             {$input}
@@ -88,8 +91,6 @@ EOT;
 
         }
         $attr['option'] = $tem;
-
-
 
 
         return $attr['option'];

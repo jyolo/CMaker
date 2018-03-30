@@ -119,6 +119,7 @@ abstract class Component implements Transport
 
         }
         $tree = [];
+
         //创建初始化数组
         foreach($arr as $k => $v){
             //如果第一个元素的pid 不是0 则，默认处理为0
