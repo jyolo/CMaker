@@ -48,11 +48,15 @@ class relation extends Component
 
 
         try{
+
             if(self::$attr['showtype'] == 'treeSelect'){
 
                 $data = self::get_tree_array(self::$attr);
+
                 self::$attr['showtype'] = 'select'; //无线层级 树形结构 默认展现形式是 select
+
             }else{
+
                 //获取数据
                 $data = self::get_models_data();
             }
@@ -61,6 +65,7 @@ class relation extends Component
 
         }
 
+
         $dom = Maker::build(self::$attr['showtype'])
             ->label(self::$attr['label'])
             ->helpinfo(self::$attr['helpinfo'])
@@ -68,6 +73,8 @@ class relation extends Component
             ->name(self::$attr['name'])
             ->choose(self::$attr['choose'])
             ->render();
+
+
 
         $dom = preg_replace('/component-name=\"(.*?)\"/' ,'component-name="relation"',$dom);
         return $dom;
@@ -91,6 +98,7 @@ class relation extends Component
             ->order($attr['order'])
             ->group($attr['group'])
             ->select();
+
         $return = [];
         $arr = explode(',',$attr['field']);
         //变成一维数组

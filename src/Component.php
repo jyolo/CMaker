@@ -115,10 +115,11 @@ abstract class Component implements Transport
 
 
             $arr = Db::name($config['table'])
-                ->field($config['field'].',path')
+                ->field($config['field'].',path,listorder')
                 ->where(isset($config['where']) ? $config['where'] : '')
-                ->order(isset($config['order']) ? $config['order']: '')
+                //->order(isset($config['order']) ? $config['order']: '')
                 ->select();
+
 
 
 
@@ -152,10 +153,16 @@ abstract class Component implements Transport
         }
         sort($tree);
         $true_tree = $tree;
+
+
+        //对tree 进行排序，默认排序字段是 listorder
+        $true_tree = self::tree_array_sort($true_tree);
+
+
         //如果要返回树形数组 则排序后直接返回
         if($return_tree_array == true)  return $true_tree;
 
-
+        //树形数组 转换成 一维数组 用于 select, table
         $arr = self::tree_to_array($true_tree ,$config['field'] ,$keep_array);
 
         if($keep_array){
@@ -169,21 +176,6 @@ abstract class Component implements Transport
         }else{
             return $arr;
         }
-
-
-
-        //此刻的数据已经是带着层级排列 删除多余的数组属性
-//        foreach($arr as $ak => $av){
-//            if(isset($av['son']))unset($av['son']);
-//            if(isset($av['_path']))unset($av['_path']);
-//            $arr[$ak] = $av;
-//        }
-
-
-        //释放变量
-//        unset($tree);
-        //sort($arr);//不能重新排序 会影响到 treeselect 的value值 具体情况 看控制器逻辑层是否需要重新排序
-//        return $arr;
 
 
     }
@@ -215,6 +207,7 @@ abstract class Component implements Transport
 
             }else{
                 $arr[$v[$field['0']]] = self::buildSpace($v['path']) . $v[$showfield];
+
             }
 
             if(count($v['son'])){
@@ -223,9 +216,43 @@ abstract class Component implements Transport
             }
         }
 
+
         return $arr;
     }
+    /**
+     * 层级树形结构的数组 进行递归冒泡排序 (升序)
+     * @param array $tree 树形结构的数据
+     * @return array
+     */
+    protected static function tree_array_sort($tree , $orderfield = 'listorder'){
+        $temp_arr = $arg = [];
 
+        for($i = 0; $i<count($tree) ;$i++){
+            for($j = 0 ;$j < (count($tree)-1); $j++){
+                $now = $tree[$j];
+                $prev = $tree[$j+1];
+
+                if($now[$orderfield] > $prev[$orderfield])
+                {
+                    $temp = $now;
+                    $tree[$j] = $prev;
+                    $tree[$j+1] = $now;
+                }
+
+            }
+
+            if(count($tree[$i]['son']) > 0){
+
+                $tree[$i]['son'] = self::tree_array_sort($tree[$i]['son']);
+
+            }
+        }
+
+
+
+        return $tree;
+
+    }
 
     /*
     * 生成空格层级字符串

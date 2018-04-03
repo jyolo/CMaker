@@ -27,6 +27,8 @@ class table extends Component
                 ['checkbox' => true]
             ],
             'url' => '',
+            'editUrl' => '',
+            'editReload' => false,
             'method' => 'post',
             'height' => '500',
             'page' => true,
@@ -92,6 +94,7 @@ EOT;
     
     table.on('tool('+attr.set.filter+')',tableExtend._tool);
     table.on('checkbox('+attr.set.filter+')',tableExtend._checkbox);
+    table.on('edit('+attr.set.filter+')',tableExtend._edit);
 
 });\r\n
 EOT;
