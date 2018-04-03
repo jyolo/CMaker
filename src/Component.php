@@ -86,13 +86,16 @@ abstract class Component implements Transport
     public static function get_tree_array($config = [] ,$keep_array = false ,$return_tree_array = false){
         $field = explode(',',$config['field']);
 
+
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
 
         //如果有 数据直接传进来 则直接使用数据
         if(isset($config['treeData']) ){
             if(!count($config['treeData'])) return [];
             $arr = $config['treeData'];
-        }else{
+        }
+        else
+        {
             $sql = 'show tables like \''.config('database.prefix').$config['table'].'\' ';
             $flag = Db::query($sql);
             //表不存在返回空数组
@@ -112,73 +115,82 @@ abstract class Component implements Transport
 
 
             $arr = Db::name($config['table'])
-                ->field($config['field'])
+                ->field($config['field'].',path')
                 ->where(isset($config['where']) ? $config['where'] : '')
                 ->order(isset($config['order']) ? $config['order']: '')
                 ->select();
 
+
+
         }
-        $tree = [];
+
 
         //创建初始化数组
         foreach($arr as $k => $v){
             //如果第一个元素的pid 不是0 则，默认处理为0
-            if($k == 0 && $v[$field[1]] != 0){
-                $v[$field[1]] = 0;
-            }
+//            if($k == 0 && $v[$field[1]] != 0){
+//                $v[$field[1]] = 0;
+//            }
             $tree[ $v[ $field[0] ] ] = $v;
-            $tree[ $v[ $field[0] ] ]['_path'] = [0];
             $tree[ $v[ $field[0] ] ]['son'] = [];
         }
+
+
         //引用
         foreach($tree as $sk => $sv){
-
-            //自动生成层级关系
-            if($sv[$field[1]] != 0 ){
-                //查找的数据 可能上级的元素不存在
-                if(!isset($tree[$sv[$field[1]]])){
-                   continue;
-                }else{
-                    $tree[$sk]['_path'] =  $tree[$sv[$field[1]]]['_path'] ;
-                    array_push($tree[$sk]['_path'],$tree[$sk][$field[1]]);
-                    //传值引用
-                    $tree[ $sv[ $field[1] ] ]['son'][] = &$tree[$sk];
-                }
+            //自动生成层级关系 //查找的数据 可能上级的元素不存在
+            if($sv[ $field[1] ] != 0 && isset($tree[ $sv[$field[1]] ])){
+                //传值引用
+                $tree[ $sv[ $field[1] ] ]['son'][] = &$tree[$sk];
             }
         }
+
         //剔除多余元素
         foreach($tree as $k => $v){
-            //层级关系字符串化
-            $tree[$k]['_path'] = join(',',$v['_path']);
-
             //如果是直接返回树形层级关系的数组 则 剔除掉多余的数组 否则保留 table搜索的时候 会经过下一个处理 进行二次转换
-            if($return_tree_array == true){
-                if(isset($v[$field[1]]) && $v[$field[1]] != 0)  unset($tree[$k]);
-            }
+            if(isset($v[$field[1]]) && $v[$field[1]] != 0)  unset($tree[$k]);
+        }
+        sort($tree);
+        $true_tree = $tree;
+        //如果要返回树形数组 则排序后直接返回
+        if($return_tree_array == true)  return $true_tree;
 
+
+        $arr = self::tree_to_array($true_tree ,$config['field'] ,$keep_array);
+
+        if($keep_array){
+            $i = 0;
+            $table_arr = [];
+            foreach($arr as $k => $v){
+                $table_arr[$i] = $v;
+                $i++;
+            }
+            return $table_arr;
+        }else{
+            return $arr;
         }
 
-        sort($tree);
-        if($return_tree_array == true) return $tree;
-        $arr = self::tree_to_array($tree ,$config['field'] ,$keep_array);
+
 
         //此刻的数据已经是带着层级排列 删除多余的数组属性
-        foreach($arr as $ak => $av){
-            if(isset($av['son']))unset($av['son']);
-            if(isset($av['_path']))unset($av['_path']);
-            $arr[$ak] = $av;
-        }
+//        foreach($arr as $ak => $av){
+//            if(isset($av['son']))unset($av['son']);
+//            if(isset($av['_path']))unset($av['_path']);
+//            $arr[$ak] = $av;
+//        }
+
+
         //释放变量
-        unset($tree);
+//        unset($tree);
         //sort($arr);//不能重新排序 会影响到 treeselect 的value值 具体情况 看控制器逻辑层是否需要重新排序
-        return $arr;
+//        return $arr;
 
 
     }
 
 
     /**
-     * 层级树形结构的 多维数组 转化成  带层级关系的一维数组
+     * 递归 层级树形结构的 多维数组 转化成  带层级关系的一维数组
      * @param array $tree 树形结构的数据
      * @param string $component_setting_field 字段字符串 id,pid
      * @param boolean $keep_array 是否保留数组
@@ -190,21 +202,19 @@ abstract class Component implements Transport
         $field = explode(',',$component_setting_field);
         //第三个字段 为显示的字段
         $showfield = (isset($field[2]) && strlen($field[2])) ? $field[2]: $field[1];
+        $pid = $field[1];
+
 
         foreach($tree as $k => $v){
-            if(!$keep_array){
 
-                //如果已经有层级符号则不添加
-                if(!strpos($v[$showfield],'|-')) {
-                    $arr[$v[$field['0']]] = self::buildSpace($v['_path']) . $v[$showfield];
-                }
-            }else{
-                //如果已经有层级符号则不添加
-                if(!strpos($v[$showfield],'|-')){
-                    $v[$showfield] = self::buildSpace($v['_path']).$v[$showfield];
-                }
 
+            //保留数组
+            if($keep_array){
+                $v[$showfield] = self::buildSpace($v['path']) . $v[$showfield];
                 $arr[$v[$field['0']]] = $v;
+
+            }else{
+                $arr[$v[$field['0']]] = self::buildSpace($v['path']) . $v[$showfield];
             }
 
             if(count($v['son'])){
@@ -212,6 +222,7 @@ abstract class Component implements Transport
                 $arr = $arr + $gui;
             }
         }
+
         return $arr;
     }
 
@@ -225,7 +236,9 @@ abstract class Component implements Transport
         if($str == '0'){
             $spacer .= '';
         }else{
+            $str = trim($str,',');
             $path = explode(',',$str);
+
             $spacer .= '&nbsp;&nbsp;';
             for($i = 0 ;$i < count($path)-1 ;$i++ ){
                 $spacer .= '&nbsp;&nbsp;&nbsp;&nbsp;';

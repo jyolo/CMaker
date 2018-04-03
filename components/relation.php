@@ -49,6 +49,7 @@ class relation extends Component
 
         try{
             if(self::$attr['showtype'] == 'treeSelect'){
+
                 $data = self::get_tree_array(self::$attr);
                 self::$attr['showtype'] = 'select'; //无线层级 树形结构 默认展现形式是 select
             }else{
