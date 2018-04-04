@@ -281,15 +281,16 @@ class Maker
         if(!in_array($name,array_keys($class::attr())))throw new \ErrorException(self::$set['component_name'].'组件 attr 方法中 没有定义该"'.$name.'"属性');
 
         //特殊的relation 组件 where 可以向 tp 中连续使用 where
-        if(self::$set['component_name'] == 'relation' && $name == 'where'){
-
-            if(!isset(self::$set[$name]))self::$set[$name] = [];
-            //压入数组
-            if(count($arguments))array_push(self::$set[$name],$arguments);
-
-        }else{
-            self::$set[$name] = isset($arguments[0]) ? $arguments[0] :'';
-        }
+//        if(self::$set['component_name'] == 'relation' && $name == 'where'){
+//
+//            if(!isset(self::$set[$name]))self::$set[$name] = [];
+//            //压入数组
+//            if(count($arguments))array_push(self::$set[$name],$arguments);
+//
+//        }else{
+//
+//        }
+        self::$set[$name] = isset($arguments[0]) ? $arguments[0] :'';
 
 
         return $this;
