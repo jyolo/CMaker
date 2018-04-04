@@ -94,7 +94,6 @@ class relation extends Component
             ->where($attr['where'])
             ->field($attr['field'])
             ->limit($attr['limit'])
-            ->order($attr['order'])
             ->group($attr['group'])
             ->select();
 
