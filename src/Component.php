@@ -101,41 +101,32 @@ abstract class Component implements Transport
             //表不存在返回空数组
             if(!count($flag))return [];
 
-
             //表存在的情况下
-            //b::name($config['table'])->value();
+            //db::name($config['table'])->value();
             if(!isset($config['field']) || strlen($config['field']) == 0) throw new \Exception('field 不能为空');
+
             $field = explode(',' ,$config['field']);
+
             $sql = 'select COUNT(*) as num from information_schema.columns WHERE table_name = "'.config('database.prefix').$config['table'].'" and column_name= "'.$field[1].'" ';
             $flag = Db::query($sql);
+
             //查看 关系字段是否存在，不存在 直接返回空 数组
             //解决 当生成方案 是normal 转 category 的时候，需要对自己的表新增层级关系的时候
             if($flag[0]['num'] == 0)return [];
 
-
-
             $arr = Db::name($config['table'])
                 ->field($config['field'].',path,listorder')
                 ->where(isset($config['where']) ? $config['where'] : '')
-                //->order(isset($config['order']) ? $config['order']: '')
                 ->select();
-
-
-
+            if(!count($arr)) return [];
 
         }
-
 
         //创建初始化数组
         foreach($arr as $k => $v){
-            //如果第一个元素的pid 不是0 则，默认处理为0
-//            if($k == 0 && $v[$field[1]] != 0){
-//                $v[$field[1]] = 0;
-//            }
             $tree[ $v[ $field[0] ] ] = $v;
             $tree[ $v[ $field[0] ] ]['son'] = [];
         }
-
 
         //引用
         foreach($tree as $sk => $sv){
@@ -146,18 +137,19 @@ abstract class Component implements Transport
             }
         }
 
+
+        $true_tree = [];
         //剔除多余元素
         foreach($tree as $k => $v){
-            //如果是直接返回树形层级关系的数组 则 剔除掉多余的数组 否则保留 table搜索的时候 会经过下一个处理 进行二次转换
-            if(isset($v[$field[1]]) && $v[$field[1]] != 0)  unset($tree[$k]);
+            //存储上级不存在的数组
+            if(!isset($tree[ $v[$field[1]] ])){
+                $true_tree[$k] = $v;
+            }
         }
-        sort($tree);
-        $true_tree = $tree;
-
+        sort($true_tree);
 
         //对tree 进行排序，默认排序字段是 listorder
         $true_tree = self::tree_array_sort($true_tree);
-
 
         //如果要返回树形数组 则排序后直接返回
         if($return_tree_array == true)  return $true_tree;
@@ -165,13 +157,15 @@ abstract class Component implements Transport
         //树形数组 转换成 一维数组 用于 select, table
         $arr = self::tree_to_array($true_tree ,$config['field'] ,$keep_array);
 
-        if($keep_array){
-            $i = 0;
-            $table_arr = [];
+        if($keep_array){ //name值保留数组的层级关系，下标从新从0开始
+
+            $i = 0;$table_arr = [];
             foreach($arr as $k => $v){
+                unset($v['son']); //删除无用的son元素
                 $table_arr[$i] = $v;
                 $i++;
             }
+
             return $table_arr;
         }else{
             return $arr;
@@ -199,10 +193,10 @@ abstract class Component implements Transport
 
         foreach($tree as $k => $v){
 
-
             //保留数组
             if($keep_array){
                 $v[$showfield] = self::buildSpace($v['path']) . $v[$showfield];
+
                 $arr[$v[$field['0']]] = $v;
 
             }else{

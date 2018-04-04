@@ -30,7 +30,6 @@ class relation extends Component
             'field' => 'id,title' , // 作为值的字段 默认第一个作为表单提交的value 第二个作为显示
             'where' => '',
             'limit' => '',
-            'order' => '',
             'group' => '',
 
         ];
