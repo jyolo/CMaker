@@ -20,6 +20,7 @@ class switchs extends Component
             'name' => 'defualt',
             'text' => '是|否',
             'layVerify' => '',
+            'layFilter' => '',
             'disabled' => '',
         ];
     }
@@ -36,7 +37,7 @@ class switchs extends Component
     <div class="layui-form-item" component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
         <div class="layui-input-inline">
-            <input type="checkbox" name="{$attr['name']}" lay-skin="switch" value="{$value}" lay-text="{$attr['text']}" {$attr['open']} {$attr['disabled']}>
+            <input type="checkbox" name="{$attr['name']}" lay-skin="switch" value="{$value}" lay-filter="{$attr['layFilter']}" lay-text="{$attr['text']}" {$attr['open']} {$attr['disabled']}>
         </div>
         <div class="layui-form-mid layui-word-aux">{$attr['helpinfo']}</div>
     </div>

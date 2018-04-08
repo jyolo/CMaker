@@ -91,14 +91,6 @@ class relation extends Component
         $flag = Db::query($sql);
         if(!count($flag))return [];
 
-<<<<<<< HEAD
-        $data = Db::name($attr['table'])
-            ->where($attr['where'])
-            ->field($attr['field'])
-            ->limit($attr['limit'])
-            ->group($attr['group'])
-            ->select();
-=======
         $Db = Db::name($attr['table']);
 
         if(strlen($attr['where'])) $Db->where($attr['where']);
@@ -107,7 +99,6 @@ class relation extends Component
         if(strlen($attr['group'])) $Db->group($attr['group']);
 
         $data = $Db->select();
->>>>>>> master
 
         $return = [];
         $arr = explode(',',$attr['field']);
