@@ -32,7 +32,7 @@ class switchs extends Component
         $attr = self::$attr;
         $attr['disabled'] = $attr['disabled'] ? 'disabled' : ''; //是否禁用
         $attr['open'] = (($attr['open'] === 'on') || ($attr['open'] == '1')) ? 'checked' : ''; //是否开启
-        
+
 
         $value = ($attr['open'] == 'checked') ? $attr['onvalue']: $attr['offvalue'] ; //开启时候的值 ，关闭则无值
         $attr['layFilter'] = $attr['layFilter'] ? $attr['layFilter'] : $attr['id'];
