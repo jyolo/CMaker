@@ -214,11 +214,11 @@ abstract class Component implements Transport
         return $arr;
     }
     /**
-     * 层级树形结构的数组 进行递归冒泡排序 (升序)
+     * 层级树形结构的数组 进行递归冒泡排序 (降序)
      * @param array $tree 树形结构的数据
      * @return array
      */
-    protected static function tree_array_sort($tree , $orderfield = 'listorder'){
+    protected static function tree_array_sort($tree , $orderfield = 'listorder' ){
         $temp_arr = $arg = [];
 
         for($i = 0; $i<count($tree) ;$i++){
@@ -226,7 +226,7 @@ abstract class Component implements Transport
                 $now = $tree[$j];
                 $prev = $tree[$j+1];
 
-                if($now[$orderfield] > $prev[$orderfield])
+                if($now[$orderfield] < $prev[$orderfield])
                 {
                     $temp = $now;
                     $tree[$j] = $prev;
