@@ -254,12 +254,12 @@ abstract class Component implements Transport
     protected static function buildSpace($str){
 
         $spacer = '';
-        if($str == '0'){
+        $str = trim($str,',');
+        $path = explode(',',$str);
+
+        if(count($path) == 1){
             $spacer .= '';
         }else{
-            $str = trim($str,',');
-            $path = explode(',',$str);
-
             $spacer .= '&nbsp;&nbsp;';
             for($i = 0 ;$i < count($path)-1 ;$i++ ){
                 $spacer .= '&nbsp;&nbsp;&nbsp;&nbsp;';
