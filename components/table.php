@@ -88,6 +88,9 @@ EOT;
         ,limit : set.limit
         ,method: set.method
         ,response: set.response
+        ,done:function(a){
+            //callback
+        }
     });
     //设定tableid
     tableExtend.tableID = set.id; 
