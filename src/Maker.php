@@ -9,15 +9,17 @@ namespace CMaker;
 use think\facade\Session;
 
 
+
 class Maker
 {
-    public static $set = [];  //所有设置的key value
-    public static $uniqid_id = ''; //组件的唯一id
-    public static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
-    public static $instance = null;       //单例
-    public static $templatePlan = 'components'; //模板方案
-    public static $static_path = '/static/';
-    public static $run_time = 0;
+    const CORENAMESPACE = 'components'; //内置组件模板路径
+    public static $instance = null;
+    public static $ExtendsRootNamespace = null; //拓展组件的根命名空间
+    public static $StaticPath = '/static/';
+    private static $set = [];  //所有设置的key value
+    private static $uniqid_id = ''; //组件的唯一id
+    private static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
+    private static $run_time = 0;//记录组件调用的次数
 
     /**
      * 初始化
@@ -28,15 +30,11 @@ class Maker
         if(is_null(self::$instance)){
             self::$instance = new self;
         }
-
         self::$set['component_name'] = $component_name;
-
         //组件的唯一id
         self::$uniqid_id = $component_name.'_'.self::$run_time;
-
         //当前页面的调用的次数
         self::$run_time++;
-
         return self::$instance;
     }
 
@@ -47,18 +45,14 @@ class Maker
      * @throws Exception
      */
     public function render(){
-
         //获取组件的class
         $class = self::getClass(self::$set['component_name']);
-
         //获取组件的属性
         $component_attr = $class::attr();
         //外部调用设定代替默认值
         //赋值一个id的属性
         self::$set['id'] = self::$uniqid_id;
         $class::$attr = array_merge($component_attr ,self::$set);
-
-
         //记录当前页面使用了哪些组件
         array_push(self::$components ,[
             'component_name' => self::$set['component_name'] ,
@@ -74,7 +68,15 @@ class Maker
         return $dom;
     }
 
-
+    /**
+     * 设置拓展的路径
+     * @param $path
+     * @return null
+     */
+    public function setExtendsRootNamespace($name){
+        self::$ExtendsRootNamespace = $name;
+        return self::$instance;
+    }
 
     /**
      * 创建js
@@ -94,14 +96,18 @@ class Maker
      */
     public static function getClass($called ){
         $arr = explode('\\',__CLASS__);
-        $buildPlan = self::$templatePlan;
+        $buildPlan = self::CORENAMESPACE;
 
         array_pop($arr);
         array_push($arr ,$buildPlan ,$called);
 
         $class = trim(join('\\',$arr));
-
+        $extendClass =   '\\component\\'.$called ;
+        //如果设置了拓展组件 优先从拓展组件中获取 组件
+        if(self::$ExtendsRootNamespace !== null && class_exists($extendClass)) return $extendClass;
+        //拓展组件没有 & 内置组件也不存在 则 抛出异常
         if(!class_exists($class)) throw new \ErrorException($class.' 组件不存在');
+
         return $class;
     }
 
@@ -206,10 +212,10 @@ class Maker
         foreach($component_unique as $k => $v){
             $class = self::getClass($v);
 
-            if($class::relyOnJsPlugin(self::$static_path)){
+            if($class::relyOnJsPlugin(self::$StaticPath)){
 
                 //初始化组件的 唯一id
-                $arr[] = $class::relyOnJsPlugin(self::$static_path);
+                $arr[] = $class::relyOnJsPlugin(self::$StaticPath);
             }
 
         }
@@ -276,7 +282,7 @@ class Maker
      */
     public function __call($name, $arguments)
     {
-        $class = self::getClass(self::$set['component_name'],self::$templatePlan);
+        $class = self::getClass(self::$set['component_name'],self::CORENAMESPACE);
 
         if(!in_array($name,array_keys($class::attr())))throw new \ErrorException(self::$set['component_name'].'组件 attr 方法中 没有定义该"'.$name.'"属性');
 
