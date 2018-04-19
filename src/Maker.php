@@ -16,9 +16,9 @@ class Maker
     public static $instance = null;
     public static $ExtendsRootNamespace = null; //拓展组件的根命名空间
     public static $StaticPath = '/static/';
+    public static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
     private static $set = [];  //所有设置的key value
     private static $uniqid_id = ''; //组件的唯一id
-    private static $components = [];    //记录当前页面调用过的组件容器 ，组件名称，组件id，组件的设置
     private static $run_time = 0;//记录组件调用的次数
 
     /**
