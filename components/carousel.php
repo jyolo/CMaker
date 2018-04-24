@@ -4,7 +4,7 @@ use CMaker\Component;
 
 
 /**
- * 幻灯片组件
+ * 幻灯片
  * User: jyolo
  * Date: 2017/7/6
  * Time: 17:08

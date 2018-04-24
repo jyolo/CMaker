@@ -3,7 +3,7 @@ namespace CMaker\components;
 use CMaker\Component;
 
 /**
- * Created by PhpStorm.
+ * 复选框
  * User: jyolo
  * Date: 2017/7/6
  * Time: 17:08

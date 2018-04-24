@@ -5,7 +5,7 @@ use think\File;
 use think\Image;
 
 /**
- * Created by PhpStorm.
+ * 上传组件webuploader
  * User: jyolo
  * Date: 2017/7/6
  * Time: 17:08

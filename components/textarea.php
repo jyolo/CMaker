@@ -3,7 +3,7 @@ namespace CMaker\components;
 use CMaker\Component;
 
 /**
- * Created by PhpStorm.
+ * 多行文本text
  * User: jyolo
  * Date: 2017/7/6
  * Time: 17:08
@@ -21,6 +21,7 @@ class textarea extends Component
             'name' => '',
             'layVerify' => '',
             'placeholder' => '',
+            'showtype' => 'block',
         ];
     }
 
@@ -31,10 +32,10 @@ class textarea extends Component
 
 
         $dom = <<<EOT
-    <div class="layui-form-item" component-name="{$attr['component_name']}">
+    <div class="layui-form-item layui-form-text" component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
-        <div class="layui-input-inline">
-           <textarea lay-verify="{$attr['layVerify']}" type="text" class="{$attr['classname']} layui-input" name="{$attr['name']}" placeholder="{$attr['placeholder']}">{$attr['value']}</textarea>
+        <div class="layui-input-{$attr['showtype']}">
+           <textarea lay-verify="{$attr['layVerify']}" type="text" class="{$attr['classname']} layui-textarea" name="{$attr['name']}" placeholder="{$attr['placeholder']}">{$attr['value']}</textarea>
         </div>
         <div class="layui-form-mid layui-word-aux">{$attr['helpinfo']}</div>
     </div>

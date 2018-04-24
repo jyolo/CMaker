@@ -7,7 +7,7 @@ use think\Exception;
 use Tree\Tree;
 
 /**
- * 关联选择组件
+ * 关联选择
  */
 class relation extends Component
 {

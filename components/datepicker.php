@@ -4,7 +4,7 @@ use CMaker\Component;
 
 
 /**
- * Created by PhpStorm.
+ * 时间选择器
  * User: jyolo
  * Date: 2017/7/6
  * Time: 17:08
