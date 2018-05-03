@@ -18,8 +18,10 @@ class ueditor extends Component
             'value' => '',
             'layVerify' => '',
             'name' => 'content',
-            'show' => 'simple',
+            'show' => 'simple', //simple middle all custom
+            'custom' => false,
             'serverUrl' => url('/mvcbuilder/ueditor'),
+            'layuiinput' => 'block',
         ];
     }
 
@@ -30,7 +32,7 @@ class ueditor extends Component
         $dom = <<<EOT
     <div class="layui-form-item" component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
-        <div class="layui-input-block">
+        <div class="layui-input-{$attr['layuiinput']}">
           <script id="{$attr['id']}" class="{$attr['component_name']}" name="{$attr['name']}" type="text/plain" style="margin-bottom: 10px;">{$attr['value']}</script>
         </div>
     </div>
@@ -72,9 +74,18 @@ EOT;
             ['fullscreen', 'source', 'undo', 'redo', 'bold']
         ];
         $toolbars['middle'] = [
-            ['fullscreen', 'source', 'undo', 'redo', 'bold','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
+            ['fullscreen', 'source', 'undo', 'redo', 'bold','bold', 'italic', 'underline', 'fontborder', 'strikethrough',
+                'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor',
+                'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
         ];
         $toolbars['all'] = false;
+
+        if(count($attr['set']['custom'])){
+            $toolbars['custom'] = [];
+            array_push($toolbars['custom'] ,$attr['set']['custom']);
+        }
+
+
         $toolbars = json_encode($toolbars);
 
         $js = <<<EOT
@@ -87,6 +98,14 @@ EOT;
         }else{
            var config = {serverUrl:'{$attr['set']['serverUrl']}'};
         }
+        
+        
+        //获取自定义配置函数 function ueditor_0_config
+        if(typeof window[ attr.uniqid_id + '_config' ] == 'function'){
+            var custom_config = window[ attr.uniqid_id + '_config' ]();
+            $.extend(config , custom_config); //合并自定义配置
+        }
+        p(config);
         
         var ue = UE.getEditor(''+attr.set.id+'',config);
 EOT;
