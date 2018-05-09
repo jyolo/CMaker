@@ -59,10 +59,10 @@ class select extends Component
         }
 
         $dom = <<<EOT
-    <div class="layui-form-item" lay-filter="{$attr['layFilter']}" component-name="{$attr['component_name']}">
+    <div class="layui-form-item"  component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
         <div class="layui-input-inline">
-            <select name="{$attr['name']}" lay-verify="{$attr['layVerify']}">
+            <select name="{$attr['name']}" lay-verify="{$attr['layVerify']}" lay-filter="{$attr['layFilter']}">
             {$option}
             </select>
         </div>

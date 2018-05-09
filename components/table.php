@@ -33,6 +33,7 @@ class table extends Component
             'height' => '500',
             'page' => true,
             'limit' => 10,
+            'limits'=> [10,50,100,500,1000,5000,10000,50000,100000],
             'param' => [],
             'loading' => true,
             'response' => [
@@ -86,6 +87,7 @@ EOT;
         ,loading:set.loading
         ,page : set.page
         ,limit : set.limit
+        ,limits :set.limits
         ,method: set.method
         ,response: set.response
         ,done:function(a){

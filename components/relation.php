@@ -25,6 +25,7 @@ class relation extends Component
             'choose' => '',//默认选中的
             'name' => 'aid',// 表单的name值
             'layVerify' => '',
+            'layFilter' => '',
             //Db类的使用的属性
             'table' => '', //数据表
             'field' => 'id,title' , // 作为值的字段 默认第一个作为表单提交的value 第二个作为显示

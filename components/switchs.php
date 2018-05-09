@@ -16,11 +16,12 @@ class switchs extends Component
             'label'=>'开关',
             'helpinfo' => '',
             'open' => '',
+            'value' => false,
             'classname' => 'preview',
             'name' => 'defualt',
             'text' => '是|否',
-            'onvalue' => '1',
-            'offvalue' => '0',
+            'onvalue' => 'on',
+            'offvalue' => 'off',
             'layVerify' => '',
             'layFilter' => '',
             'disabled' => '',
@@ -30,8 +31,16 @@ class switchs extends Component
     //设置dom结构
     public static function dom(){
         $attr = self::$attr;
+
         $attr['disabled'] = $attr['disabled'] ? 'disabled' : ''; //是否禁用
-        $attr['open'] = (($attr['open'] === 'on') || ($attr['open'] == '1')) ? 'checked' : ''; //是否开启
+
+         //是否开启
+        if($attr['value'] === false && (($attr['open'] === 'on') || ($attr['open'] == '1'))){
+            $attr['open'] = 'checked';
+        }else{
+            if($attr['value'] == $attr['onvalue']) $attr['open'] = 'checked';
+            if($attr['value'] == $attr['offvalue']) $attr['open'] = '';
+        }
 
 
         $value = ($attr['open'] == 'checked') ? $attr['onvalue']: $attr['offvalue'] ; //开启时候的值 ，关闭则无值
