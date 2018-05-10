@@ -35,6 +35,9 @@ class table extends Component
             'limit' => 10,
             'limits'=> [10,50,100,500,1000,5000,10000,50000,100000],
             'param' => [],
+            'even' => true,
+            'skin'=> '',
+            'size' => '',
             'loading' => true,
             'response' => [
                 'statusName' => 'code',
@@ -88,6 +91,7 @@ EOT;
         ,page : set.page
         ,limit : set.limit
         ,limits :set.limits
+        ,even:set.even
         ,method: set.method
         ,response: set.response
         ,done:function(a){
