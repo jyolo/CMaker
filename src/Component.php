@@ -86,7 +86,6 @@ abstract class Component implements Transport
     public static function get_tree_array($config = [] ,$keep_array = false ,$return_tree_array = false){
         $field = explode(',',$config['field']);
 
-
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
 
         //如果有 数据直接传进来 则直接使用数据
@@ -121,13 +120,21 @@ abstract class Component implements Transport
             if(!count($arr)) return [];
 
         }
-
         //创建初始化数组
         foreach($arr as $k => $v){
+            //解析参数
+            if(isset($v['params']) && strlen($v['params']) && strpos($v['params'] ,'=')){
+                $arr = explode('&',$v['params']);
+                $arg = [];
+                foreach($arr as $sk => $sv){
+                    $tem = explode('=',$sv);
+                    $arg[trim($tem[0])] = trim($tem[1]);
+                }
+                $v['params'] = $arg;
+            }
             $tree[ $v[ $field[0] ] ] = $v;
             $tree[ $v[ $field[0] ] ]['son'] = [];
         }
-
         //引用
         foreach($tree as $sk => $sv){
             //自动生成层级关系 //查找的数据 可能上级的元素不存在
