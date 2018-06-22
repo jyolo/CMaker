@@ -52,7 +52,14 @@ class Maker
         //外部调用设定代替默认值
         //赋值一个id的属性
         self::$set['id'] = self::$uniqid_id;
+
         $class::$attr = array_merge($component_attr ,self::$set);
+
+
+        if(isset($component_attr['layFilter'])){ //如果组件有这个属性 ，但却没有设置，则默认 是 uniqid_id
+            $class::$attr['layFilter'] = ( !isset(self::$set['layFilter']) )  ? self::$uniqid_id  : self::$set['layFilter'];
+        }
+
         //记录当前页面使用了哪些组件
         array_push(self::$components ,[
             'component_name' => self::$set['component_name'] ,

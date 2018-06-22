@@ -15,7 +15,7 @@ class number extends Component
         return [
             'label'=>'数字文本',
             'placeholder' => '数字文本',
-            'helpinfo' => '帮助信息',
+            'helpinfo' => '',
             'value' => '',
             'classname' => 'preview',
             'name' => '',

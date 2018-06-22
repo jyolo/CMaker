@@ -29,7 +29,7 @@ class text extends Component
     //设置dom结构
     public static function dom(){
         $attr = self::$attr;
-        $attr['placeholder'] = $attr['placeholder']?$attr['placeholder']:$attr['label'];
+        $attr['placeholder'] = $attr['placeholder'] ? $attr['placeholder'] : $attr['label'];
         $attr['disabled'] = $attr['disabled'] ? 'disabled' : '';
 
         $dom = <<<EOT

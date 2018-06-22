@@ -78,7 +78,7 @@ abstract class Component implements Transport
 
     /**
      * 非递归得到 层级树形结构的 多维数组
-     * @param array $config [ treeData => array ,field => 'id ,pid ,name']
+     * @param array $config [ treeData => array ,field => 'id ,pid ,name','limit' => '' ]
      * @param bool 是否保留数组 默认false不保留
      * @return bool 是否直接返回树形层级的数组 默认false
      * @throws Exception
@@ -89,7 +89,8 @@ abstract class Component implements Transport
         if(!isset($field[1]))throw new Exception('缺少父级关系字段 比如:parentid');
 
         //如果有 数据直接传进来 则直接使用数据
-        if(isset($config['treeData']) ){
+        if(isset($config['treeData']) )
+        {
             if(!count($config['treeData'])) return [];
             $arr = $config['treeData'];
         }
@@ -116,6 +117,7 @@ abstract class Component implements Transport
             $arr = Db::name($config['table'])
                 ->field($config['field'].',path,listorder')
                 ->where(isset($config['where']) ? $config['where'] : '')
+                ->limit( (isset($config['limit']) && $config['limit'] > 0) ?  $config['limit'] : '')
                 ->select();
             if(!count($arr)) return [];
 

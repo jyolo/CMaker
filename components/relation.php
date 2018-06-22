@@ -20,12 +20,13 @@ class relation extends Component
     public static function attr(){
         return [
             'label' => '关联选择',
-            'helpinfo' => '关联选择，展现形式支持 select,radio,checkbox,treeSelect',
+            'helpinfo' => '关联选择，展现形式支持 select,searchSelect,radio,checkbox,treeSelect',
             'showtype' => 'select', //默认的显示方式
             'choose' => '',//默认选中的
             'name' => 'aid',// 表单的name值
             'layVerify' => '',
             'layFilter' => '',
+            'laySearch' => false,
             //Db类的使用的属性
             'table' => '', //数据表
             'field' => 'id,title' , // 作为值的字段 默认第一个作为表单提交的value 第二个作为显示
@@ -45,37 +46,30 @@ class relation extends Component
 
         if(!in_array(self::$attr['showtype'],['select','checkbox','radio','treeSelect']))
             return 'ralation组件showtype 仅支持select,checkbox,radio,treeSelect 这四种显示方式';
-
-
         try{
-
-            if(self::$attr['showtype'] == 'treeSelect'){
-
+            //选择展现类型 是 treeSelect  或者 有三个字段 则统一 为 treeSelect
+            if(self::$attr['showtype'] == 'treeSelect' )
+            {
                 $data = self::get_tree_array(self::$attr);
-
                 self::$attr['showtype'] = 'select'; //无线层级 树形结构 默认展现形式是 select
-
-            }else{
-
+            }
+            else
+            {
                 //获取数据
                 $data = self::get_models_data();
-
             }
         }catch (\Exception $e){
             throw new \Exception($e->getMessage());
-
         }
 
-
-        $dom = Maker::build(self::$attr['showtype'])
-            ->label(self::$attr['label'])
-            ->helpinfo(self::$attr['helpinfo'])
-            ->option($data)
-            ->name(self::$attr['name'])
-            ->choose(self::$attr['choose'])
-            ->render();
-
-
+        $obj = Maker::build(self::$attr['showtype']);
+        $dom =  $obj->label(self::$attr['label'])
+                    ->helpinfo(self::$attr['helpinfo'])
+                    ->option($data)
+                    ->name(self::$attr['name'])
+                    ->choose(self::$attr['choose'])
+                    ->layFilter(self::$attr['layFilter'])
+                    ->render();
 
         $dom = preg_replace('/component-name=\"(.*?)\"/' ,'component-name="relation"',$dom);
         return $dom;

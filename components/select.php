@@ -20,6 +20,7 @@ class select extends Component
             'choose' => '',
             'fields' => false,
             'name' => 'defualt',
+            'laySearch' => false,
             'layVerify' => '',
             'layFilter' => '',
         ];
@@ -35,14 +36,14 @@ class select extends Component
             $attr['option'] = self::strToArray($attr);
         }
 
-        if(!strlen($attr['choose']))$attr['choose'] = null;
+        if(!strlen($attr['choose'])) $attr['choose'] = null;
         //if(!strlen($attr['choose']) || $attr['choose'] == 0)$attr['choose'] = null;
 
         if(strlen($attr['choose'])){
             if(!isset($attr['option'][$attr['choose']]))$attr['choose'] = '';
         }
 
-
+        $attr['laySearch'] =  $attr['laySearch'] ? 'lay-search' : '';
 
 
         foreach($attr['option'] as $k => $v){
@@ -55,14 +56,13 @@ class select extends Component
                 $selected = (strlen($attr['choose']) && $attr['choose'] == $k) ?  'selected' :  '';
                 $option .= '<option value="'.$k.'" '.$selected.'>'.$v.'</option>';
             }
-
         }
 
         $dom = <<<EOT
     <div class="layui-form-item"  component-name="{$attr['component_name']}">
         <label class="layui-form-label">{$attr['label']}</label>
         <div class="layui-input-inline">
-            <select name="{$attr['name']}" lay-verify="{$attr['layVerify']}" lay-filter="{$attr['layFilter']}">
+            <select name="{$attr['name']}" lay-verify="{$attr['layVerify']}" lay-filter="{$attr['layFilter']}" {$attr['laySearch']}>
             {$option}
             </select>
         </div>
