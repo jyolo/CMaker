@@ -31,6 +31,7 @@ class datepicker extends Component
             //time	时间选择器	只提供时、分、秒选择
             //datetime	日期时间选择器	可选择：年、月、日、时、分、秒
             'type' => 'date',
+            'shownowtime' => true,  //显示当前时间
             //是否开启范围选择
             'range' => '',
             //format - 自定义格式
@@ -98,13 +99,15 @@ EOT;
         var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
                 + " " + date.getHours() + seperator2 + date.getMinutes()
                 + seperator2 + date.getSeconds();
+                
         return currentdate;
     }
     layui.use('laydate', function(){
+        var defualt_value = set.shownowtime ? getNowFormatDate() : set.value;
         var laydate = layui.laydate;
         var option = {
                 elem: '#'+attr.uniqid_id
-                ,value: getNowFormatDate()
+                ,value: defualt_value
                 ,type: ''+set.type+''
                 ,lang: ''+set.lang+''
                 ,theme: ''+set.theme+''
