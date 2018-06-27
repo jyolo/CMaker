@@ -32,7 +32,7 @@ class webuploader extends Component
     public static function dom(){
         $attr = self::$attr;
 
-        $start_upload_botton = $attr['auto'] ? '':'<button type="button" class="layui-btn '.$attr['component_name'].'" id="'.$attr['id'].'_start" >开始上传</button>';
+        $start_upload_botton = ($attr['auto'] == 'on') ? '':'<button type="button" class="layui-btn '.$attr['component_name'].'" id="'.$attr['id'].'_start" >开始上传</button>';
 
         $value_dom = self::value_preiew();
         //如果value有值的话
@@ -124,8 +124,8 @@ EOT;
 
         $js = <<<EOT
     var set = attr.set;
-    set.multiple = (set.multiple == 1) ? true :false;
-    set.auto = (set.auto == 1) ? true : false;
+    set.multiple = (set.multiple == 'on') ? true :false;
+    set.auto = (set.auto == 'on') ? true : false;
     var uploader = WebUploader.create({
         // swf文件路径
         swf: '__PLUGIN_PATH__/webuploader/Uploader.swf',
