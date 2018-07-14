@@ -123,7 +123,18 @@ EOT;
     public static function script($attr){
 
         $js = <<<EOT
+        //解决删除图片后 不在传值的问题。
+    $('.del_up_pic').unbind('click').bind('click',function(){             
+        if($(this).parents('.img_preiew').find('.preiew_item').length-1 == 0){
+            $(this).parents('.img_preiew').css('display','none');
+        }
+        var input = $(this).parent().find('input[type=hidden]').clone();
+        input.attr('value','');
+        $(this).parent().after(input);
+        $(this).parent().remove();
+    });  
     var set = attr.set;
+    
     set.multiple = (set.multiple == 'on') ? true :false;
     set.auto = (set.auto == 'on') ? true : false;
     var uploader = WebUploader.create({
@@ -201,6 +212,7 @@ EOT;
                         copy.attr('id',n.id).addClass('preiew_item').find('img').attr('src',src);
                         
                         copy.find('.del_up_pic').bind('click',function(){
+                            
                             if($(this).parents('.img_preiew').find('.preiew_item').length-1 == 0){
                                 $(this).parents('.img_preiew').css('display','none');
                             }
@@ -223,8 +235,7 @@ EOT;
                     
                     //如果是单选，删除旧的文件队列以及预览
                     if(set.multiple == false){
-                        p(n.id);
-                        p(n.id);
+                      
                         if($('#'+set.id).parent().siblings('.file_preiew').find('tr').length > 1){
                             var files = uploader.getFiles();
                             
@@ -339,7 +350,7 @@ EOT;
 
         if(!strlen(self::$attr['value'])) return '';
 
-        if($attr['multiple'] == true){
+        if($attr['multiple'] == 'on' || $attr['multiple'] == 1){
             $attr['name'] = $attr['name'].'[]';
         }
         $str = '';
