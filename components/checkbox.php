@@ -45,8 +45,6 @@ class checkbox extends Component
         $input = '';
 
         foreach($attr['option'] as $k => $v){
-
-
             if($attr['fields'] != false){
                 $f = explode(',',$attr['fields']);
 
@@ -70,6 +68,37 @@ class checkbox extends Component
 EOT;
 
         return $dom;
+    }
+
+    public static function script($attr){
+        $script = <<<EOT
+\n;layui.use(['form'], function(){
+    var form = layui.form;
+    
+    var set = attr.set;
+    
+    p(set.name);
+    set.nocheck = false;
+    form.on('checkbox('+set.layFilter+')', function(data){
+        $('input[name="'+set.name+'[]"]').each(function(i,n){
+            if($(n).parent().find('.layui-form-checked').length == 0){
+                set.nocheck = true;
+            }else{
+                set.nocheck = false;
+            }
+        })
+        if(set.nocheck){
+            $(data.elem).parent('div').append('<input type="hidden" class="no_check" name="'+set.name+'" value=""/>')
+        }else{
+            $(data.elem).parent('div').find('.no_check').remove();
+        }
+
+    });  
+});
+
+EOT;
+        return $script;
+
     }
 
     //处理select的value 和选中的值
