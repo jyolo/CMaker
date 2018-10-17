@@ -107,7 +107,7 @@ EOT;
             ],
             'js' => [
                 [
-                    'path' => "https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"
+                    'path' => "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"
                 ],
                 [
                     'path' => "{$static_path}plugin/webuploader/webuploader.js"
