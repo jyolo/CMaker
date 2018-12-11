@@ -80,7 +80,7 @@ EOT;
         ];
         $toolbars['all'] = false;
 
-        if($attr['set']['custom'] && count($attr['set']['custom'])){{
+        if($attr['set']['custom'] && count($attr['set']['custom'])){
             $toolbars['custom'] = [];
             array_push($toolbars['custom'] ,$attr['set']['custom']);
         }
